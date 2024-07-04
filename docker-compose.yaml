@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      #MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: kanu
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: ""
+    ports:
+      - "3307:3307"
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -ppass" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+    mysql-data:
+
